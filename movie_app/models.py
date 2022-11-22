@@ -10,6 +10,9 @@ class Director(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def movie_count(self):
+        return len(self.movies.all())
 
 
 class Movie(models.Model):
@@ -19,10 +22,14 @@ class Movie(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     duration = models.IntegerField(help_text='Длительность в минутах', verbose_name='Длительность')
-    director = models.ForeignKey(Director, on_delete=models.SET_DEFAULT, default='Неизвестно', verbose_name='Режиссер')
+    director = models.ForeignKey(Director, on_delete=models.SET_DEFAULT, default='Неизвестно', verbose_name='Режиссер', related_name='movies')
 
     def __str__(self):
         return self.title
+    
+    def rating(self):
+        lst = [review.stars for review in self.reviews.all()]
+        return sum(lst) / len(lst)
 
 
 class Review(models.Model):
@@ -32,7 +39,8 @@ class Review(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     text = models.TextField(verbose_name='Текст')
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Фильм')
+    stars = models.IntegerField(default=0, verbose_name='Рейтинг')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Фильм', related_name='reviews')
 
     def __str__(self):
         if len(self.text) <= 50:
