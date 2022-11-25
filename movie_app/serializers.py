@@ -11,10 +11,11 @@ class UserSimpleSerializer(serializers.ModelSerializer):
 
 class DirectorSerializer(serializers.ModelSerializer):
     movies_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Director
         fields = '__all__'
-    
+
     def get_movies_count(self, director):
         return director.movie_count()
 
@@ -22,33 +23,39 @@ class DirectorSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer()
     rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = 'id title description duration director rating'.split()
-        
+
     def get_rating(self, movie):
         return movie.rating()
 
+
 class ReviewSerializer(serializers.ModelSerializer):
-    author = UserSimpleSerializer()
-    movie = MovieSerializer()
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    movie = serializers.PrimaryKeyRelatedField(queryset=Movie.objects.all())
+
     class Meta:
         model = Review
         fields = '__all__'
-    
+
 
 class ReviewOnMovieSerializer(serializers.ModelSerializer):
-    author = UserSimpleSerializer()
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Review
         fields = 'id author text stars'.split()
 
+
 class MoviesReviewsSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
     reviews = ReviewOnMovieSerializer(many=True)
+
     class Meta:
         model = Movie
         fields = 'id title description duration director reviews rating'.split()
-    
+
     def get_rating(self, movie):
         return movie.rating()
