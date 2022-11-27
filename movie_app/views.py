@@ -1,40 +1,71 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import viewsets
+
 from .serializers import *
 from .models import *
 from rest_framework import status
-from rest_framework.generics import *
-
 
 # Create your views here.
-class MovieListAPIView(ListCreateAPIView):
+"""
+    Class Based View on View Sets
+    13 lines
+"""
+class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
 
-class MovieItemUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-
-
-class DirectorListAPIView(ListCreateAPIView):
+class DirectorViewSet(viewsets.ModelViewSet):
     queryset = Director.objects.all()
     serializer_class = DirectorSerializer
 
 
-class DirectorItemUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Director.objects.all()
-    serializer_class = DirectorSerializer
-
-
-class ReviewListAPIView(ListCreateAPIView):
+class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
 
-class ReviewItemUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+"""
+    Class Based View on Generic API Views
+    28 lines
+"""
+
+# class MovieListAPIView(ListCreateAPIView):
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
+#
+#
+# class MovieItemUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
+#
+#
+# class DirectorListAPIView(ListCreateAPIView):
+#     queryset = Director.objects.all()
+#     serializer_class = DirectorSerializer
+#
+#
+# class DirectorItemUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+#     queryset = Director.objects.all()
+#     serializer_class = DirectorSerializer
+#
+#
+# class ReviewListAPIView(ListCreateAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+#
+#
+# class ReviewItemUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+
+"""
+    Function based view
+    117 lines
+"""
+
+
 # @api_view(['GET', 'POST'])
 # def director_view(request):
 #     if request.method == 'GET':
