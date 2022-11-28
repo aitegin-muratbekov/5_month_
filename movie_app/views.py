@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework import viewsets
 
@@ -11,9 +11,16 @@ from rest_framework import status
     Class Based View on View Sets
     13 lines
 """
+
+
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+
+    @action(methods=['get'], detail=False)
+    def reviews(self, request):
+        serializer = MoviesReviewsSerializer(Movie.objects.all(), many=True)
+        return Response(data=serializer.data)
 
 
 class DirectorViewSet(viewsets.ModelViewSet):
